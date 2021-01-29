@@ -1,0 +1,160 @@
+
+
+<ContentNavigationDrawer>:
+    orientation: "vertical"
+    padding: "8dp"
+    spacing: "8dp"
+
+    AnchorLayout:
+        anchor_x: "left"
+        size_hint_y: None
+        height: avatar.height
+
+        BoxLayout:
+            orientation: "horizontal"
+            canvas.before:
+                Color:
+                    rgb: 0.9, 0.9, 0.9
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            BoxLayout:
+                id: avatar
+                # make circular cropping
+                canvas:
+#                    Color:
+#                        rgba: (0.9, 0.9, 0.9, 1)
+#                    RoundedRectangle:
+#                        radius: [self.size[1]-(self.size[1]/2)]
+                    Ellipse:
+                        size: (self.size[1]-dp(10), self.size[1]-dp(10))
+                        pos: (self.pos[0]+dp(5), self.pos[1]+dp(5))
+                        source: "assets\images\Korovin.png"
+#            Image:
+#                id: avatar
+#                size_hint: None, None
+#                source: "assets\images\Korovin.png"
+
+            BoxLayout:
+                orientation: "vertical"
+
+#                MDIconButton:
+#                    icon: "star"
+                MDLabel:
+                    text: "Phrase searcher"
+                    font_style: "Button"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+                MDLabel:
+                    text: "a.v.korovin73@gmail.com"
+                    font_style: "Caption"
+                    size_hint_y: None
+                    height: self.texture_size[1]
+
+    ScrollView:
+
+        MDList:
+
+            OneLineListItem:
+                icon: "star"
+                text: "Search a phrase"
+                on_press:
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = "scr 1"
+
+            OneLineListItem:
+                text: "About"
+                on_press:
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = "scr 2"
+
+
+Screen:
+
+    MDToolbar:
+        id: toolbar
+        pos_hint: {"top": 1}
+        elevation: 10
+        title: "MDNavigationDrawer"
+        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
+
+    MDNavigationLayout:
+        x: toolbar.height
+
+        ScreenManager:
+            id: screen_manager
+
+            Screen:
+                name: "scr 1"
+                BoxLayout:
+                    orientation: "vertical"
+
+                    MDToolbar:
+                        title: "Search phrase in a text"
+                        md_bg_color: app.theme_cls.primary_color
+                        elevation: 10
+                        left_action_items: [["menu", lambda x: nav_drawer.set_state("toggle")]]
+#                        right_action_items: [["arrow-left", lambda x: app.back_to_home_screen()]]
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        padding: "16dp"
+                        spacing: "8dp"
+
+
+                        # Button
+                        MDFillRoundFlatButton:
+                            id: file_manager
+                            size_hint: 1, 0.1
+                            text: "Load text"
+#                            on_release: app.file_manager_open()
+
+                        # text field
+                        MDTextField:
+                            id: var1
+                            size_hint: 1, 0.7
+                            multiline: True
+                            hint_text: "Type or load text here"
+                            helper_text: "Text for searching"
+
+                        # phrase field
+                        MDTextField:
+                            id: var2
+                            size_hint: 1, 0.1
+                            multiline: False
+                            hint_text: "Type phrase here"
+                            helper_text: "Searching a phrase"
+
+                        # field for results output
+                        MDLabel:
+                            id: out
+                            size_hint: 1, 0.1
+                            multiline: False
+                            hint_text: "Search result is here"
+                            helper_text: "Searching result"
+
+                        # Search button
+                        MDFillRoundFlatButton:
+                            id: onSearch
+                            size_hint: 1, 0.1
+                            text: "Search"
+                            on_release: app.on_search()
+#                                root.on_search()
+
+
+            Screen:
+                name: "scr 2"
+
+                MDLabel:
+                    multiline: True
+                    text: "About\ntest of python for android\nphrase searcher\nAuthor: A.V. Korovin\na.v.korovin73@gmail.com"
+                    halign: "center"
+
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            ContentNavigationDrawer:
+                screen_manager: screen_manager
+                nav_drawer: nav_drawer
